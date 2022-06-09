@@ -35,10 +35,3 @@ class WebhookSender:
             return successful
 
 
-if __name__ == '__main__':
-    webhook_sender = WebhookSender()
-    # url can be found from the Chime chatroom, under Manage webhooks and bots. Get url by "copy URL"
-    # message is custom.
-    # number of retries is custom
-    # Replace parameters but leave the quotation marks intact.
-    webhook_sender.send_webhook(url='URL here', message='Message HERE', retry=5)
