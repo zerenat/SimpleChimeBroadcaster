@@ -10,7 +10,7 @@ class SimpleChimeBroadcaster:
     def __init__(self):
         self.__main_window = None
         self.__version = None
-        self.__broad_caster = ChimeBroadcaster()
+        self.__broadcaster = ChimeBroadcaster()
         self.__csv_reader = CSVreader()
         self.__targets = self.__csv_reader.read_csv(''.join((str(Path(__file__).parent), '\\webhooks.csv')))
         self.__launch()
@@ -19,7 +19,7 @@ class SimpleChimeBroadcaster:
         layout = [[sg.Menu([['File', ['Refresh', 'Exit']],
                             ['About', ['Wiki', 'Webhooks API', 'Source']]])],
                   [sg.Text('Message:')],
-                  [sg.Multiline(size=(75, 15), key='-inputbox-')],
+                  [sg.Multiline(size=(75, 15), key='-input_box-')],
                   [sg.Column([[sg.Text('Pick the targets:', size=(13, 1), pad=(1, 2))],
                               [sg.Combo(list(self.__targets.keys()), size=(13, 1), pad=(1, 2),
                                         expand_x=True, key='-target_list-')],
@@ -29,10 +29,12 @@ class SimpleChimeBroadcaster:
             event, values = self.__main_window(timeout=2500)
             if event == '-submit_button-':
                 pass
-                # if len(message) <= 0:
-                #     continue
-                # webhooks =
+                message = values['-input_box-']
+                if len(message) > 0:
+                    targets = values['-target_list-']
+                    self.__broadcaster.run_broadcaster(message=message, targets=targets, number_of_threads=20)
                 print(values)
+
             elif event == 'Restart':
                 self.__main_window.close()
                 SimpleChimeBroadcaster()
