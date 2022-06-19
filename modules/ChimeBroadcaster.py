@@ -47,32 +47,23 @@ class ChimeBroadcaster(object):
             end_bookmark = start_bookmark + equal_split
 
         # Set up messenger threads
+        thread = None
         for entry in splits_list:
-            threading.Thread(target=self._messenger_thread, args=([entry, message])).start()
-
-        # Set up observer thread (monitors thread count during broadcasting)
-        observer_tread = threading.Thread(target=self._observe, args=())
-        observer_tread.start()
-        observer_tread.join()
+            thread = threading.Thread(target=self._messenger_thread, args=([entry, message]))
+            thread.start()
+        thread.join()
         result = {'successful': True,
                   'failed_to_send': self.__failed_to_send_messages}
         if len(self.__failed_to_send_messages) > 0:
             result['successful'] = False
+        self.__failed_to_send_messages = []
         return result
-
-    @staticmethod
-    def _observe():
-        try:
-            while threading.active_count() > 2:
-                time.sleep(0.5)
-        except Exception as e:
-            print(e)
 
     def _messenger_thread(self, urls, message):
         try:
             for entry in urls:
                 if not self.__webhook_messenger.send_webhook(entry, message, 1):
-                    fail_message = "Failed to send message to: " + entry
+                    fail_message = entry
                     self.__failed_to_send_messages.append(fail_message)
                 time.sleep(0.8)
         except Exception as e:
