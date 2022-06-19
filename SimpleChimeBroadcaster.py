@@ -1,5 +1,6 @@
 
 import PySimpleGUI as sg
+import sys
 from pathlib import Path
 from modules.ChimeBroadcaster import ChimeBroadcaster
 from modules.CSVreader import CSVreader
@@ -19,7 +20,7 @@ class SimpleChimeBroadcaster:
                             ['About', ['Wiki', 'Webhooks API', 'Source']]])],
                   [sg.Text('Message:')],
                   [sg.Multiline(size=(75, 15), key='-inputbox-')],
-                  [sg.Column([[sg.Text('Pick the targets', size=(13, 1), pad=(1, 2))],
+                  [sg.Column([[sg.Text('Pick the targets:', size=(13, 1), pad=(1, 2))],
                               [sg.Combo(list(self.__targets.keys()), size=(13, 1), pad=(1, 2),
                                         expand_x=True, key='-target_list-')],
                               [sg.Button('Send Message', size=(13, 1), pad=(1, 2), key='-submit_button-')]])]]
@@ -32,9 +33,13 @@ class SimpleChimeBroadcaster:
                 #     continue
                 # webhooks =
                 print(values)
-            elif event == 'Refresh':
+            elif event == 'Restart':
                 self.__main_window.close()
                 SimpleChimeBroadcaster()
+            elif event == 'Exit':
+                sys.exit()
+            elif event in ['Wiki', 'Webhooks API', 'Source']:
+                pass
             elif event is None:
                break
 
