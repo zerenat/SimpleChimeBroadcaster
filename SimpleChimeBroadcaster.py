@@ -40,6 +40,11 @@ class SimpleChimeBroadcaster:
                     targets = values['-target_list-']
                     if len(targets) > 0:
                         targets = self.__targets[targets]
+                        temp_targets = []
+                        for target in targets:
+                            if len(target) > 0:
+                                temp_targets.append(target)
+                        targets = temp_targets
                         if len(targets) > 0:
                             self.__disable_send_button(True)
                             threading.Thread(target=self.__broadcast, args=([message, targets])).start()
