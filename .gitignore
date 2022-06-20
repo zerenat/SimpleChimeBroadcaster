@@ -1,6 +1,7 @@
 *.csv
 *.idea
 *.spec
+*.exe
 **/venv
 **/dist
 **/build
