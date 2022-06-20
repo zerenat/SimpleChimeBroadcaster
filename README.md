@@ -1,7 +1,7 @@
 # SimpleChimeBroadcaster
 SimpleChimeBroadcaster is an easy to use, Python-based tool for transmitting messages to Amazon Chime chat rooms.
 
-# About
+# Set-up
 The tool can be acquired as a pre-packaged Python executable (packaged with pyinstaller) or as source code.
 Once set-up, ensure you have **simple_broadcaster_configuration.ini** and **webhooks.csv** files present at the project folder. The files are required dependencies and currently need to share location with the project itself.
 * **simple_broadcaster_configuration.ini** - Holds resource URL links for the broadcaster.
