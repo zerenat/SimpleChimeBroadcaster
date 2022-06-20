@@ -1,3 +1,4 @@
+import time
 
 import PySimpleGUI as sg
 import sys
@@ -17,7 +18,7 @@ class SimpleChimeBroadcaster:
         self.__broadcaster = ChimeBroadcaster()
         self.__csv_reader = CSVreader()
         self.__config_file = ConfigParser().get_config_as_dictionary('simple_broadcaster_configuration.ini')
-        self.__targets = self.__csv_reader.read_csv(''.join((str(Path(__file__).parent), '\\webhooks.csv')))
+        self.__targets = self.__csv_reader.read_csv('webhooks.csv')
         self.__launch()
 
     def __launch(self):
@@ -34,20 +35,22 @@ class SimpleChimeBroadcaster:
             event, values = self.__main_window(timeout=2500)
             # Handle broadcast request
             if event == '-submit_button-':
-                self.__disable_send_button(True)
                 message = values['-input_box-']
                 if len(message) > 0:
                     targets = values['-target_list-']
                     if len(targets) > 0:
                         targets = self.__targets[targets]
                         if len(targets) > 0:
+                            self.__disable_send_button(True)
                             threading.Thread(target=self.__broadcast, args=([message, targets])).start()
                         else:
                             sg.popup_ok('Target column is empty.\nPlease fill the column in webhooks.csv file.')
                     else:
                         sg.popup_ok('Please select a target column from the drop-down menu.')
+                else:
+                    sg.popup_ok('Message is blank.')
             # Handle Restart
-            elif event == 'Restart':
+            elif event == 'Refresh':
                 self.__main_window.close()
                 SimpleChimeBroadcaster()
             # Handle Exit
@@ -91,5 +94,9 @@ class SimpleChimeBroadcaster:
 
 
 if __name__ == '__main__':
-    SimpleChimeBroadcaster()
-
+    try:
+        SimpleChimeBroadcaster()
+    except FileNotFoundError as e:
+        print(e)
+        time.sleep(5)
+        sys.exit()
